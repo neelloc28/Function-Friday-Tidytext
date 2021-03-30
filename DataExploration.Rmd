@@ -1,0 +1,65 @@
+---
+title: "PlayingWithData"
+author: "Colleen Minnihan"
+date: "3/29/2021"
+output: html_document
+---
+
+```{r}
+library(fivethirtyeight)
+library(dplyr)
+library(tidytext)
+library(tidyr)
+library(tidyverse)
+library(ggplot2)
+
+troll_tweets <- read.csv("IRAhandle_tweets_12.csv")
+
+dim(troll_tweets)
+
+#cleaning data
+troll_tweets1 <- troll_tweets %>%
+  filter(language == 'English') #only tweets that are in English
+  
+troll_tweets
+```
+```{r}
+#separate tweet so that each row gets an individual word: unnest tokens
+
+troll_tweets1 <- troll_tweets1 %>%
+  unnest_tokens(word,content)
+
+troll_tweets1
+
+#get rid of stopwords (the, and, etc.)
+troll_tweets1 <- troll_tweets1 %>%
+  anti_join(stop_words) %>%
+  filter(word != 'https', word != 't.co') #get rid of https and t.co
+
+troll_tweets1 %>%
+  count(word) %>%
+  slice_max(order_by = n, n = 100)
+```
+
+```{r}
+#get rid of: 2, rt, 1, amp, 3, http, 5, 4, 10
+
+troll_tweets2 <- troll_tweets1 %>%
+  mutate(word = str_extract(word,"[a-z']+")) %>%
+  filter(word != '1', word != '2', word != '3', word != '4', word != '5', word != '10', word != 'rt', word != 'amp', word != 'http', !(word %in% letters))
+
+letters
+```
+
+```{r}
+troll_tweets_small <- troll_tweets2 %>%
+  count(word) %>%
+  slice_max(order_by = n, n = 50)
+
+ggplot(troll_tweets_small, aes(y = fct_reorder(word,n), x = n)) +
+  geom_col()
+
+```
+
+
+
