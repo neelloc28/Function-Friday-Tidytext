@@ -58,8 +58,44 @@ troll_tweets_small <- troll_tweets2 %>%
 
 ggplot(troll_tweets_small, aes(y = fct_reorder(word,n), x = n)) +
   geom_col()
-
 ```
+
+Make wordcloud
+```{r}
+library(textdata)
+library(reshape2)
+library(wordcloud)
+
+troll_tweets_100 <- troll_tweets2 %>%
+  count(word) %>%
+  slice_max(order_by = n, n = 100)
+
+troll_tweets_100 %>%
+  with(wordcloud(word, n, max.words = 100))
+
+troll_tweets2 %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "green"),
+                   max.words = 100)
+
+wordcloud(words = troll_tweets_100$word, freq = troll_tweets_100$n, min.freq = 1,
+          max.words=200, random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+```{r}
+troll_tweets_sentiment <- troll_tweets2 %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(sentiment)
+
+#count negative and positive words
+troll_tweets_sentiment
+
+get_sentiments("bing")
+```
+
 
 
 
