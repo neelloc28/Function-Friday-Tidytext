@@ -5,21 +5,40 @@ date: "3/29/2021"
 output: html_document
 ---
 
-```{r}
+```{r message = FALSE, warning = FALSE}
+# load libraries 
 library(fivethirtyeight)
 library(dplyr)
 library(tidytext)
 library(tidyr)
 library(tidyverse)
 library(ggplot2)
+# for word clould
+library(textdata)
+library(reshape2)
+library(wordcloud)
+```
 
+```{r}
+# read in data sets
 troll_tweets_news <- read.csv("IRAhandle_tweets_12.csv") #seems to be imitating news sources
 troll_tweets_left <- read.csv("IRAhandle_tweets_5.csv") #seems to be imitating liberals
 troll_tweets_right <- read.csv("IRAhandle_tweets_8.csv") #seems to be imitating Trump supporter
+```
 
-dim(troll_tweets)
+**Data Exploration: size, distribution, etc**
 
-#cleaning data
+```{r}
+# look at the distribution
+dim(troll_tweets_news)
+dim(troll_tweets_left)
+dim(troll_tweets_right)
+```
+
+**Q: Data Cleaning**
+
+```{r}
+# only consider english data 
 troll_tweets1 <- troll_tweets_news %>%
   filter(language == 'English') #only tweets that are in English
   
@@ -29,41 +48,51 @@ troll_tweets_left <- troll_tweets_left %>%
 troll_tweets_right <- troll_tweets_right %>%
   filter(language == 'English')
 
-troll_tweets
+troll_tweets1
 troll_tweets_left
 troll_tweets_right
 ```
 
 ```{r}
-#separate tweet so that each row gets an individual word: unnest tokens
+troll_tweets1 %>% 
+  select(where(is.numeric)) %>% 
+  pivot_longer(cols = everything(),
+               names_to = "variable", 
+               values_to = "value") %>% 
+  ggplot(aes(x = value)) +
+  geom_bar() +
+  facet_wrap(vars(variable), 
+             scales = "free")
+```
 
-troll_tweets1 <- troll_tweets1 %>%
+
+```{r}
+#separate tweet so that each row gets an individual word: unnest tokens
+troll_tweets_untoken <- troll_tweets1 %>%
   unnest_tokens(word,content)
 
-troll_tweets1
+troll_tweets_untoken
 
 #get rid of stopwords (the, and, etc.)
-troll_tweets1 <- troll_tweets1 %>%
+troll_tweets_cleaned <- troll_tweets_untoken %>%
   anti_join(stop_words) %>%
   filter(word != 'https', word != 't.co') #get rid of https and t.co
 
-troll_tweets1 %>%
+# top 100 words 
+troll_tweets_cleaned %>%
   count(word) %>%
   slice_max(order_by = n, n = 100)
 ```
 
 ```{r}
-#get rid of: 2, rt, 1, amp, 3, http, 5, 4, 10
-
-troll_tweets2 <- troll_tweets1 %>%
+# Final cleaning stage: get rid of 2, rt, 1, amp, 3, http, 5, 4, 10, and single letter words
+troll_tweets_fullclean <- troll_tweets_cleaned %>%
   mutate(word = str_extract(word,"[a-z']+")) %>%
   filter(word != '1', word != '2', word != '3', word != '4', word != '5', word != '10', word != 'rt', word != 'amp', word != 'http', !(word %in% letters))
-
-letters
 ```
 
 ```{r}
-troll_tweets_small <- troll_tweets2 %>%
+troll_tweets_small <- troll_tweets_fullclean %>%
   count(word) %>%
   slice_max(order_by = n, n = 50)
 
@@ -71,33 +100,35 @@ ggplot(troll_tweets_small, aes(y = fct_reorder(word,n), x = n)) +
   geom_col()
 ```
 
-Make wordcloud
-```{r}
-library(textdata)
-library(reshape2)
-library(wordcloud)
-
-troll_tweets_100 <- troll_tweets2 %>%
+**Q: Make wordcloud**
+```{r message = FALSE, warning = FALSE}
+troll_tweets_100 <- troll_tweets_fullclean %>%
   count(word) %>%
   slice_max(order_by = n, n = 100)
 
+# most frequently used words
 troll_tweets_100 %>%
   with(wordcloud(word, n, max.words = 100))
 
-troll_tweets2 %>%
+wordcloud(words = troll_tweets_100$word, freq = troll_tweets_100$n, min.freq = 1,
+          max.words=200, random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+
+
+# sentiment analysis (positive vs negative)
+troll_tweets_fullclean %>%
   inner_join(get_sentiments("bing")) %>%
   count(word, sentiment, sort = TRUE) %>%
   acast(word ~ sentiment, value.var = "n", fill = 0) %>%
   comparison.cloud(colors = c("red", "green"),
                    max.words = 100)
 
-wordcloud(words = troll_tweets_100$word, freq = troll_tweets_100$n, min.freq = 1,
-          max.words=200, random.order=FALSE, rot.per=0.35, 
-          colors=brewer.pal(8, "Dark2"))
 ```
 
+**Q: More Sentiment Analysis**
+
 ```{r}
-troll_tweets_sentiment <- troll_tweets2 %>%
+troll_tweets_sentiment <- troll_tweets_fullclean %>%
   inner_join(get_sentiments("bing")) %>%
   count(sentiment)
 
