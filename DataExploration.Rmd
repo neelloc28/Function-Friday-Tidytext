@@ -13,7 +13,7 @@ library(tidytext)
 library(tidyr)
 library(tidyverse)
 library(ggplot2)
-# for word clould
+# for word cloud
 library(textdata)
 library(reshape2)
 library(wordcloud)
@@ -22,8 +22,8 @@ library(wordcloud)
 ```{r}
 # read in data sets
 troll_tweets_news <- read.csv("IRAhandle_tweets_12.csv") #seems to be imitating news sources
-troll_tweets_left <- read.csv("IRAhandle_tweets_5.csv") #seems to be imitating liberals
-troll_tweets_right <- read.csv("IRAhandle_tweets_8.csv") #seems to be imitating Trump supporter
+troll_tweets_left <- read.csv("IRAhandle_tweets_5.csv") #seems to be imitating the far left
+troll_tweets_right <- read.csv("IRAhandle_tweets_8.csv") #seems to be imitating Trump supporters
 ```
 
 **Data Exploration: size, distribution, etc**

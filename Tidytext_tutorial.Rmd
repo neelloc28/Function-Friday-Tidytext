@@ -1,0 +1,25 @@
+---
+title: "Tidytext Tutorial"
+author: "Colleen Minnihan"
+date: "3/31/2021"
+output: html_document
+---
+
+# What is tidytext?
+
+# About the data
+
+These are tweets from Twitter handles that are connected to the Internet Research Agency (IRA), a Russian "troll factory."  The majority of these tweets were posted from 2015-2017, but the datasets encompass tweets from February 2012 to May 2018.
+
+Three of the main categories of troll tweet that we will be focusing on are Left Trolls, Right Trolls, and News Feed.  **Left Trolls** usually pretend to be BLM activists, aiming to divide the democratic party (in this context, being pro-Bernie so that votes are taken away from Hillary).  **Right trolls** imitate Trump supporters, and **News Feed** handles are "local news aggregators," typically linking to legitimate news.
+
+For our upcoming analyses, some important variables are:
+
+  * **author** (handle sending the tweet)
+  * **content** (text of the tweet)
+  * **language** (language of the tweet)
+  * **publish_date** (date and time the tweet was sent)
+
+Variable documentation can be found on [Github](https://github.com/fivethirtyeight/russian-troll-tweets/) and a more detailed description of the dataset can be found in this [fivethirtyeight article](https://fivethirtyeight.com/features/why-were-sharing-3-million-russian-troll-tweets/).
+
+Because there are 12 datasets containing 2,973,371 tweets sent by 2,848 Twitter handles in total, we will be using three of these datasets (one from a Right troll, one from a Left troll, and one from a News Feed account).
