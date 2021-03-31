@@ -21,9 +21,18 @@ library(wordcloud)
 
 ```{r}
 # read in data sets
-troll_tweets_news <- read.csv("IRAhandle_tweets_12.csv") #seems to be imitating news sources
-troll_tweets_left <- read.csv("IRAhandle_tweets_5.csv") #seems to be imitating the far left
-troll_tweets_right <- read.csv("IRAhandle_tweets_8.csv") #seems to be imitating Trump supporters
+troll_tweets_news <- read.csv("IRAhandle_tweets_12.csv") %>%
+  select(-alt_external_id,-external_author_id)
+  #seems to be imitating news sources
+troll_tweets_left <- read.csv("IRAhandle_tweets_5.csv") %>%
+  select(-alt_external_id,-external_author_id) #seems to be imitating the far left
+troll_tweets_right <- read.csv("IRAhandle_tweets_8.csv") %>%
+  select(-alt_external_id,-external_author_id) #seems to be imitating Trump supporters
+
+#combine datasets
+troll_tweets_big <- troll_tweets_news %>% 
+  bind_rows(troll_tweets_left) %>%
+  bind_rows(troll_tweets_right)
 ```
 
 **Data Exploration: size, distribution, etc**
