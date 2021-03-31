@@ -13,16 +13,27 @@ library(tidyr)
 library(tidyverse)
 library(ggplot2)
 
-troll_tweets <- read.csv("IRAhandle_tweets_12.csv")
+troll_tweets_news <- read.csv("IRAhandle_tweets_12.csv") #seems to be imitating news sources
+troll_tweets_left <- read.csv("IRAhandle_tweets_5.csv") #seems to be imitating liberals
+troll_tweets_right <- read.csv("IRAhandle_tweets_8.csv") #seems to be imitating Trump supporter
 
 dim(troll_tweets)
 
 #cleaning data
-troll_tweets1 <- troll_tweets %>%
+troll_tweets1 <- troll_tweets_news %>%
   filter(language == 'English') #only tweets that are in English
   
+troll_tweets_left <- troll_tweets_left %>%
+  filter(language == 'English')
+
+troll_tweets_right <- troll_tweets_right %>%
+  filter(language == 'English')
+
 troll_tweets
+troll_tweets_left
+troll_tweets_right
 ```
+
 ```{r}
 #separate tweet so that each row gets an individual word: unnest tokens
 
