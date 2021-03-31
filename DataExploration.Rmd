@@ -128,6 +128,7 @@ troll_tweets_fullclean %>%
 **Q: More Sentiment Analysis**
 
 ```{r}
+# bing makes it into positive / negative
 troll_tweets_sentiment <- troll_tweets_fullclean %>%
   inner_join(get_sentiments("bing")) %>%
   count(sentiment)
