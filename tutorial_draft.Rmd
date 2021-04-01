@@ -26,7 +26,62 @@ troll_tweets<- read.csv("IRAhandle_tweets_12.csv")
 
 ```
 
+```{r}
 
+
+
+text<-c("Lisa is awesome","I love Data Science","I hate cilantro", "I dislike vegetables", "I enjoy smiling", "I hate exams", "I love travelling")
+text
+
+```
+```{r}
+text_df<- tibble(line = 1:length(text), text = text)
+text_df
+```
+
+```{r}
+text_unnest <- text_df %>% 
+  unnest_tokens(word, text)
+```
+
+
+```{r}
+head(stop_words) #write description about this
+
+text_clean <- text_unnest %>% 
+ anti_join(stop_words) 
+
+text_clean
+```
+
+```{r}
+text_clean %>%
+  inner_join(get_sentiments("bing")) 
+
+text_clean %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "green"),
+                   max.words = 100)
+```
+```{r}
+text_clean %>%
+  inner_join(get_sentiments("bing")) %>% 
+  count(sentiment)
+```
+```{r}
+
+text_count<- text_unnest %>% 
+  count(word)
+text_count
+text_clean
+
+text_clean %>% 
+  left_join(text_count, 
+            by = "word") %>% 
+  bind_tf_idf(word, line, n)
+```
 
 
 **Data Exploration: size, distribution, etc**
@@ -34,6 +89,7 @@ troll_tweets<- read.csv("IRAhandle_tweets_12.csv")
 ```{r}
 # look at the dimensions
 dim(troll_tweets)
+
 
 ```
 
@@ -110,12 +166,7 @@ wordcloud(words = troll_tweets_100$word, freq = troll_tweets_100$n, min.freq = 1
 
 
 # sentiment analysis (positive vs negative)
-troll_tweets_fullclean %>%
-  inner_join(get_sentiments("bing")) %>%
-  count(word, sentiment, sort = TRUE) %>%
-  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
-  comparison.cloud(colors = c("red", "green"),
-                   max.words = 100)
+
 
 ```
 
