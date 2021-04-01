@@ -29,10 +29,20 @@ troll_tweets_left <- read.csv("IRAhandle_tweets_5.csv") %>%
 troll_tweets_right <- read.csv("IRAhandle_tweets_8.csv") %>%
   select(-alt_external_id,-external_author_id) #seems to be imitating Trump supporters
 
+
 #combine datasets
 troll_tweets_big <- troll_tweets_news %>% 
   bind_rows(troll_tweets_left) %>%
   bind_rows(troll_tweets_right)
+```
+
+
+```{r}
+nlevels(factor(troll_tweets_right$author))
+nlevels(factor(troll_tweets_left$author))
+nlevels(factor(troll_tweets_left$author))
+
+
 ```
 
 **Data Exploration: size, distribution, etc**
