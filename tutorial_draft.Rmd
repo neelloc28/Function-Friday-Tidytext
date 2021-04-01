@@ -18,13 +18,6 @@ library(reshape2)
 library(wordcloud)
 ```
 
-```{r}
-# read in data sets
-# Download file from github and place in same folder
-
-troll_tweets<- read.csv("IRAhandle_tweets_12.csv")
-
-```
 
 ```{r}
 
@@ -82,7 +75,17 @@ text_clean %>%
             by = "word") %>% 
   bind_tf_idf(word, line, n)
 ```
+**Read in troll tweets data**
 
+```{r}
+# read in data sets
+# Download file from github and place in same folder
+
+troll_tweets<- read.csv("IRAhandle_tweets_12.csv")
+
+```
+
+Variable documentation can be found on [Github](https://github.com/fivethirtyeight/russian-troll-tweets/)
 
 **Data Exploration: size, distribution, etc**
 
@@ -103,23 +106,26 @@ troll_tweets1 <- troll_tweets%>%
 
 ```
 
+#should we just ask them to make two or three exploratory plots of variables they find interesting?
 ```{r}
-troll_tweets1 %>% 
-  select(where(is.numeric)) %>% 
-  pivot_longer(cols = everything(),
-               names_to = "variable", 
-               values_to = "value") %>% 
-  ggplot(aes(x = value)) +
+#possible ideas for exploratory plots
+
+#see where tweets were being posted from
+ggplot(troll_tweets1, aes(x = region)) +
   geom_bar() +
-  facet_wrap(vars(variable), 
-             scales = "free")
+  theme(axis.text.x = element_text(angle = 90))
+
+#see what kinds of accounts there are
+ggplot(troll_tweets1, aes(x = account_category)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90))
 ```
 
-
-```{r}
+#unnest the tokens so that instead of each row being a tweet, each row is a word
+```{r, eval=FALSE}
 #separate tweet so that each row gets an individual word: unnest tokens
 troll_tweets_untoken <- troll_tweets1 %>%
-  unnest_tokens(word,content)
+  unnest_tokens(??,??)
 
 troll_tweets_untoken
 
