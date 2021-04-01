@@ -99,9 +99,9 @@ dim(troll_tweets)
 **Q: Data Cleaning**
 
 ```{r}
-# only consider english data 
+# only consider tweets that are in English 
 troll_tweets1 <- troll_tweets%>%
-  filter(language == 'English') #only tweets that are in English
+  filter(language == 'English')
   
 
 ```
@@ -122,10 +122,10 @@ ggplot(troll_tweets1, aes(x = account_category)) +
 ```
 
 #unnest the tokens so that instead of each row being a tweet, each row is a word
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 #separate tweet so that each row gets an individual word: unnest tokens
 troll_tweets_untoken <- troll_tweets1 %>%
-  unnest_tokens(??,??)
+  unnest_tokens(word,content)
 
 troll_tweets_untoken
 
@@ -143,7 +143,7 @@ troll_tweets_cleaned %>%
 ```{r}
 # Final cleaning stage: get rid of 2, rt, 1, amp, 3, http, 5, 4, 10, and single letter words
 troll_tweets_fullclean <- troll_tweets_cleaned %>%
-  mutate(word = str_extract(word,"[a-z']+")) %>%
+  #mutate(word = str_extract(word,"[a-z']+")) %>%
   filter(word != '1', word != '2', word != '3', word != '4', word != '5', word != '10', word != 'rt', word != 'amp', word != 'http', !(word %in% letters))
 ```
 
@@ -172,8 +172,11 @@ wordcloud(words = troll_tweets_100$word, freq = troll_tweets_100$n, min.freq = 1
 
 
 # sentiment analysis (positive vs negative)
-
-
+troll_tweets_100 %>%
+  inner_join(get_sentiments("bing")) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "purple"),
+                   max.words = 100)
 ```
 
 **Q: More Sentiment Analysis**

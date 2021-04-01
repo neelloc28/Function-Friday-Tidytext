@@ -7,7 +7,13 @@ output: html_document
 
 # What is tidytext?
 
-# About the data
+# Tutorial
+
+## Exercises
+
+Now you will try using tidytext on a new dataset about Russian Troll tweets.
+
+# Read about the data
 
 These are tweets from Twitter handles that are connected to the Internet Research Agency (IRA), a Russian "troll factory."  The majority of these tweets were posted from 2015-2017, but the datasets encompass tweets from February 2012 to May 2018.
 
@@ -23,3 +29,105 @@ For our upcoming analyses, some important variables are:
 Variable documentation can be found on [Github](https://github.com/fivethirtyeight/russian-troll-tweets/) and a more detailed description of the dataset can be found in this [fivethirtyeight article](https://fivethirtyeight.com/features/why-were-sharing-3-million-russian-troll-tweets/).
 
 Because there are 12 datasets containing 2,973,371 tweets sent by 2,848 Twitter handles in total, we will be using three of these datasets (one from a Right troll, one from a Left troll, and one from a News Feed account).
+
+**1. Read in Troll Tweets Dataset**
+
+```{r}
+# Download the file from github and place in the same project folder
+
+troll_tweets<- read.csv("IRAhandle_tweets_12.csv")
+```
+
+**2. Basic Data Cleaning and Exploration**
+
+  a. Remove rows where the tweet was in a language other than English
+  b. Report the dimensions of the dataset
+  c. Create two or three basic exploratory plots of the data (ex. plot of the different locations from which tweets were posted, plot of the account category of a tweet)
+  
+```{r}
+
+```
+
+
+**3. Unnest Tokens**
+
+We want each row to represent a word from a tweet, rather than an entire tweet.
+
+```{r, eval = FALSE}
+troll_tweets_untoken <- troll_tweets1 %>%
+  unnest_tokens(???,???)
+
+troll_tweets_untoken
+```
+
+**4. Remove stopwords**
+
+```{r, eval = FALSE}
+#get rid of stopwords (the, and, etc.)
+troll_tweets_cleaned <- troll_tweets_untoken %>%
+  anti_join(stop_words)
+
+%>%
+  filter(word != 'https', word != 't.co') #get rid of https and t.co
+```
+
+Take a look at the troll_tweets_cleaned dataset.  Are there any other words/letters/numbers that we want to eliminate that weren't taken care of by stop_words?
+
+```{r, eval = FALSE}
+#get rid of http, https, rt, amp, single number digits, and singular letters
+troll_tweets_cleaned <- troll_tweets_cleaned %>%
+  filter(word != ????)
+```
+
+**5. Look at a subset of the tweets to see how often the top words appear.**
+
+```{r, eval = FALSE}
+troll_tweets_small <- troll_tweets_cleaned %>%
+  count(??) %>%
+  slice_max(order_by = n, n = 50) # 50 most occurring words
+
+# visualize the number of times the 50 top words appear
+ggplot(troll_tweets_small, aes(y = fct_reorder(word,n), x = n)) +
+  geom_col()
+```
+
+**6. Sentiment Analysis**
+
+  a. Get the sentiments using the "bing" parameter (which classifies words into "positive" or "negative")
+  b. Report how many positive and negative words there are in the dataset.  Are there more positive or negative words, and why do you think this might be?
+```{r, eval = FALSE}
+# look at 
+get_sentiments("bing")
+
+# assign a sentiment to each word that has one associated
+troll_tweets_sentiment <- troll_tweets_cleaned %>%
+  inner_join(???)
+
+# count the sentiments
+troll_tweets_sentiment %>% 
+  ???
+```
+
+**7. Using the troll_tweets_small dataset, make a wordcloud:**
+
+  a. That is sized by the number of times that a word appears in the tweets
+  b. That is colored by sentiment (positive or negative)
+
+```{r, eval = FALSE}
+# make a wordcloud where the size of the word is based on the number of times the word appears across the tweets
+
+troll_tweets_small %>%
+  with(wordcloud(word, n, max.words = ??))
+
+# make a wordcloud colored by sentiment
+
+troll_tweets_sentiment %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c(??,??),
+                   max.words = ??)
+```
+
+Are there any words whose categorization as "positive" or "negative" surprised you?
+
+
+

@@ -174,8 +174,15 @@ pre code {
 <div id="what-is-tidytext" class="section level1">
 <h1>What is tidytext?</h1>
 </div>
-<div id="about-the-data" class="section level1">
-<h1>About the data</h1>
+<div id="tutorial" class="section level1">
+<h1>Tutorial</h1>
+<div id="exercises" class="section level2">
+<h2>Exercises</h2>
+<p>Now you will try using tidytext on a new dataset about Russian Troll tweets.</p>
+</div>
+</div>
+<div id="read-about-the-data" class="section level1">
+<h1>Read about the data</h1>
 <p>These are tweets from Twitter handles that are connected to the Internet Research Agency (IRA), a Russian “troll factory.” The majority of these tweets were posted from 2015-2017, but the datasets encompass tweets from February 2012 to May 2018.</p>
 <p>Three of the main categories of troll tweet that we will be focusing on are Left Trolls, Right Trolls, and News Feed. <strong>Left Trolls</strong> usually pretend to be BLM activists, aiming to divide the democratic party (in this context, being pro-Bernie so that votes are taken away from Hillary). <strong>Right trolls</strong> imitate Trump supporters, and <strong>News Feed</strong> handles are “local news aggregators,” typically linking to legitimate news.</p>
 <p>For our upcoming analyses, some important variables are:</p>
@@ -187,6 +194,73 @@ pre code {
 </ul>
 <p>Variable documentation can be found on <a href="https://github.com/fivethirtyeight/russian-troll-tweets/">Github</a> and a more detailed description of the dataset can be found in this <a href="https://fivethirtyeight.com/features/why-were-sharing-3-million-russian-troll-tweets/">fivethirtyeight article</a>.</p>
 <p>Because there are 12 datasets containing 2,973,371 tweets sent by 2,848 Twitter handles in total, we will be using three of these datasets (one from a Right troll, one from a Left troll, and one from a News Feed account).</p>
+<p><strong>1. Read in Troll Tweets Dataset</strong></p>
+<pre class="r"><code># Download the file from github and place in the same project folder
+
+troll_tweets&lt;- read.csv(&quot;IRAhandle_tweets_12.csv&quot;)</code></pre>
+<p><strong>2. Basic Data Cleaning and Exploration</strong></p>
+<ol style="list-style-type: lower-alpha">
+<li>Remove rows where the tweet was in a language other than English</li>
+<li>Report the dimensions of the dataset</li>
+<li>Create two or three basic exploratory plots of the data (ex. plot of the different locations from which tweets were posted, plot of the account category of a tweet)</li>
+</ol>
+<p><strong>3. Unnest Tokens</strong></p>
+<p>We want each row to represent a word from a tweet, rather than an entire tweet.</p>
+<pre class="r"><code>troll_tweets_untoken &lt;- troll_tweets1 %&gt;%
+  unnest_tokens(???,???)
+
+troll_tweets_untoken</code></pre>
+<p><strong>4. Remove stopwords</strong></p>
+<pre class="r"><code>#get rid of stopwords (the, and, etc.)
+troll_tweets_cleaned &lt;- troll_tweets_untoken %&gt;%
+  anti_join(stop_words)
+
+%&gt;%
+  filter(word != &#39;https&#39;, word != &#39;t.co&#39;) #get rid of https and t.co</code></pre>
+<p>Take a look at the troll_tweets_cleaned dataset. Are there any other words/letters/numbers that we want to eliminate that weren’t taken care of by stop_words?</p>
+<pre class="r"><code>#get rid of http, https, rt, amp, single number digits, and singular letters
+troll_tweets_cleaned &lt;- troll_tweets_cleaned %&gt;%
+  filter(word != ????)</code></pre>
+<p><strong>5. Look at a subset of the tweets to see how often the top words appear.</strong></p>
+<pre class="r"><code>troll_tweets_small &lt;- troll_tweets_cleaned %&gt;%
+  count(??) %&gt;%
+  slice_max(order_by = n, n = 50) # 50 most occurring words
+
+# visualize the number of times the 50 top words appear
+ggplot(troll_tweets_small, aes(y = fct_reorder(word,n), x = n)) +
+  geom_col()</code></pre>
+<p><strong>6. Sentiment Analysis</strong></p>
+<ol style="list-style-type: lower-alpha">
+<li>Get the sentiments using the “bing” parameter (which classifies words into “positive” or “negative”)</li>
+<li>Report how many positive and negative words there are in the dataset. Are there more positive or negative words, and why do you think this might be?</li>
+</ol>
+<pre class="r"><code># look at 
+get_sentiments(&quot;bing&quot;)
+
+# assign a sentiment to each word that has one associated
+troll_tweets_sentiment &lt;- troll_tweets_cleaned %&gt;%
+  inner_join(???)
+
+# count the sentiments
+troll_tweets_sentiment %&gt;% 
+  ???</code></pre>
+<p><strong>7. Using the troll_tweets_small dataset, make a wordcloud:</strong></p>
+<ol style="list-style-type: lower-alpha">
+<li>That is sized by the number of times that a word appears in the tweets</li>
+<li>That is colored by sentiment (positive or negative)</li>
+</ol>
+<pre class="r"><code># make a wordcloud where the size of the word is based on the number of times the word appears across the tweets
+
+troll_tweets_small %&gt;%
+  with(wordcloud(word, n, max.words = ??))
+
+# make a wordcloud colored by sentiment
+
+troll_tweets_sentiment %&gt;%
+  acast(word ~ sentiment, value.var = &quot;n&quot;, fill = 0) %&gt;%
+  comparison.cloud(colors = c(??,??),
+                   max.words = ??)</code></pre>
+<p>Are there any words whose categorization as “positive” or “negative” surprised you?</p>
 </div>
 
 
