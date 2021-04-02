@@ -1,7 +1,7 @@
 ---
 title: "Tidytext Tutorial"
-author: "Colleen Minnihan"
-date: "3/31/2021"
+author: "Colleen Minnihan, Jackson Tak, Niketh Gamage"
+date: "4/2/2021"
 output: html_document
 ---
 
@@ -318,5 +318,14 @@ troll_tweets_sentiment %>%
 
 Are there any words whose categorization as "positive" or "negative" surprised you?
 
+
+
+**Sources**
+
+  *https://cran.r-project.org/web/packages/tidytext/tidytext.pdf
+  *https://www.tidytextmining.com/
+  *https://fivethirtyeight.com/features/why-were-sharing-3-million-russian-troll-tweets
+  *https://www.youtube.com/watch?v=-uVo0Xvmimw
+  *https://github.com/fivethirtyeight/russian-troll-tweets/
 
 
