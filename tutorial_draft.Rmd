@@ -113,7 +113,15 @@ With the cleaned version of the data, we will begin our analysis. In this tutori
 
 Before beginning the sentiment analysis, let's take a step back and understand the purpose of the sentiment analysis. Sentiment analysis "provides a way to understand the attitudes and opinions expressed in texts". 
 
-To conduct sentiment analysis, we will be first looking at the `get_sentiments()`. By using this package   
+To conduct sentiment analysis, we will be first looking at the `get_sentiments()`. By using this function within the `tidytext` package, we can look at look at words with negative and positive sentiments. Note that this function takes in a lexicon parameter. There are three sentiment lexicons that we can use: 
+
+- `bing` (default): positive vs. negative
+
+- `nrc`: assigns yes vs. no to positive, negative, anger, anticipation, disgust, fear, joy, sadness, surprise, and trust cateogries. 
+
+- `AFINN`: assigns scores from -5 to 5 depending on the sentiment of the word. 
+
+For this tutorial, we will use `bing` for the simplicity. Feel free to play with other lexicons. 
 
 ```{r}
 # Sentiments 
@@ -131,25 +139,60 @@ sentiments %>%
 ```
 
 
-```{r}
-text_clean %>%
-  inner_join(get_sentiments("bing")) 
-```
+Next, to figure out the sentiment for each word, we will join the two data sets: `sentiments` and `text_clean`. Note that some words in the `text_clean` data set are dropped i.e., "exams", "weather", "apple", etc.   
 
 ```{r}
-text_clean %>%
-  inner_join(get_sentiments("bing")) %>%
-  count(word, sentiment, sort = TRUE) %>%
-  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
-  comparison.cloud(colors = c("red", "green"),
-                   max.words = 100)
+sentiment_data <- text_clean %>%
+  inner_join(sentiments) 
+
+sentiment_data
 ```
 
+
+Using this sentiment data, we will now begin the sentiment analysis by using some of the functions that we already know. 
+
 ```{r}
-text_clean %>%
-  inner_join(get_sentiments("bing")) %>% 
+sentiment_data %>%  
   count(sentiment)
 ```
+
+From above, We see that there are 3 negative words and 6 positive words. 
+
+
+**Making cool visualizations using `WordCloud`**
+
+With the above analysis in mind, we can also create interesting visualizations using `wordcloud` package. 
+
+Using the `text_clean` data (without sentiments), we can create this nice visualization which shows us all the words in the data set. Note that the size of "hate" and "love" are bigger than other words. This is because they appear more than other words.  
+
+```{r}
+text_clean %>%
+  count(word) %>%
+  with(wordcloud(word, n))
+```
+
+Using the data set that includes sentiments, we can also create a similar visualization.   
+
+```{r}
+sentiment_data %>%
+  count(word, sentiment, sort = TRUE) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "green"))
+```
+
+Compared to the first wordcloud visualization, the one allows us to make a comparison. By looking at this visualization, we can understand what words are positively and negatively associated and what words appear more than the others within their specific groups. 
+
+\
+\
+\
+
+### Other notable functions in the `tidytext` package
+
+For the purpose of this tutorial, we selected some of the `tidytext` functions. There are many more function that you may be interested in using for your final project if your group were to do some text mining and analysis. 
+
+Other functions and their documentations can be found in the link below: 
+
+https://cran.r-project.org/web/packages/tidytext/tidytext.pdf
 
 
 
