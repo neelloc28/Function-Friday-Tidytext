@@ -5,6 +5,24 @@ date: "3/29/2021"
 output: html_document
 ---
 
+### **Introduction** 
+
+Today, we will talk about the `TidyText` package. The `tidytext` packages allows us to effectively do our text mining tasks by converting texts into *tidy formats*, when incorporated with other tools in data science or machine learning. 
+
+In this tutorial, we will explain some of the key functions used in the 'tidytext' package by using a simple example. We will then ask you to work on questions using a different data set: Russian Troll Tweets. 
+
+
+\
+\
+\
+
+
+### **Getting Started** 
+
+**Loading libraries**
+
+First, as always, we will have to load libraries and install packages. You will encounter some familiar packages, but the main libraries required to do text mining with `tidytext` are listed below: 
+
 ```{r message = FALSE, warning = FALSE}
 # load libraries 
 library(dplyr)
@@ -12,45 +30,113 @@ library(tidytext)
 library(tidyr)
 library(tidyverse)
 library(ggplot2)
-# for word cloud
 library(textdata)
 library(reshape2)
-library(wordcloud)
+library(wordcloud) # for wordcloud
+library(stopwords)
 ```
 
 
+
+**Looking at the Data Set**
+
+After loading all the relevant libraries, we will look a simple data set that we created. The `text` data set includes 9 different sentences or strings. 
+
 ```{r}
+text<-c("Lisa is awesome","I love Data Science","I hate cilantro", "I dislike vegetables", "I enjoy smiling", "I hate exams", "I love travelling", "The weather is so nice!", "Can I have an apple?")
 
-
-
-text<-c("Lisa is awesome","I love Data Science","I hate cilantro", "I dislike vegetables", "I enjoy smiling", "I hate exams", "I love travelling")
 text
-
 ```
+
+
+The first task before doing going into text analysis is converting our data set into a *tibble* data frame by using the `tibble` function. A *tibble* is just another class of data frames in R, which allows us to work with tidy functions as it does not convert strings to factors and does not use row names. 
+
+Take a look at how we were able to achieve this below: 
+
 ```{r}
+# Converting to a tibble data frame 
 text_df<- tibble(line = 1:length(text), text = text)
+
+# Tibble data frame
 text_df
 ```
 
+After we successfully convert our data set into a tibble data frame, we want to extract individual words and put them into a data frame so that each row has one *token*. 
+
+Each `token` can be interpreted as a word or a unit of text. By utilizing tidytext's `unnest_tokens` function, we can break the text into individual tokens. This process is also known as the *tokenization* process. Note that this function eliminates all the punctuation marks.    
+
 ```{r}
+# Tokenization process
 text_unnest <- text_df %>% 
   unnest_tokens(word, text)
+
+# Tokenized data 
+text_unnest
+```
+
+As we see above, the `unnest_tokens` function takes in two parameters. The first parameter, the output column, will be the name of the output column or individual words. In our exercise, we will call it `word`. 
+
+The second parameter will take the tokenized column name from the tibble data frame.
+
+Before starting our text analysis, we will also have to exclude stop words such as "is", "I", "the", "about", "an", "the", etc. The `tidytext` package provides a tibble data set called `stop_words` that includes different stop words. 
+
+You can take a peak at some of the stop words by calling the `stop_words` data set:    
+
+```{r}
+# Look at the stop words data set
+head(stop_words)
 ```
 
 
-```{r}
-head(stop_words) #write description about this
+Finally, we will use a familiar function, `anti_join`, to clean the data set. This is the last step of the data cleaning process that we need to do before moving forward with the analysis. By joining the two data sets, `stop_words` and `text_unnest`, we can arrive at a clean data set. 
 
+```{r}
+# Join the two data sets together to only extract meaningful words
 text_clean <- text_unnest %>% 
  anti_join(stop_words) 
 
+# Cleaned data set 
 text_clean
 ```
+
+
+\
+\
+\
+
+### **Data Analysis**
+
+With the cleaned version of the data, we will begin our analysis. In this tutorial, we mainly focus on the *sentiment analysis* and creating relevant visualizations using *word cloud*  
+
+
+**Sentiment Analysis**
+
+Before beginning the sentiment analysis, let's take a step back and understand the purpose of the sentiment analysis. Sentiment analysis "provides a way to understand the attitudes and opinions expressed in texts". 
+
+To conduct sentiment analysis, we will be first looking at the `get_sentiments()`. By using this package   
+
+```{r}
+# Sentiments 
+sentiments <- get_sentiments("bing")
+
+# Negative words
+sentiments %>% 
+  filter(sentiment == "negative") %>% 
+  head()
+
+# Positive words
+sentiments %>% 
+  filter(sentiment == "positive") %>% 
+  head()
+```
+
 
 ```{r}
 text_clean %>%
   inner_join(get_sentiments("bing")) 
+```
 
+```{r}
 text_clean %>%
   inner_join(get_sentiments("bing")) %>%
   count(word, sentiment, sort = TRUE) %>%
@@ -58,23 +144,19 @@ text_clean %>%
   comparison.cloud(colors = c("red", "green"),
                    max.words = 100)
 ```
+
 ```{r}
 text_clean %>%
   inner_join(get_sentiments("bing")) %>% 
   count(sentiment)
 ```
-```{r}
 
-text_count<- text_unnest %>% 
-  count(word)
-text_count
-text_clean
 
-text_clean %>% 
-  left_join(text_count, 
-            by = "word") %>% 
-  bind_tf_idf(word, line, n)
-```
+
+
+
+
+
 **Read in troll tweets data**
 
 ```{r}
