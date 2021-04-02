@@ -10,7 +10,7 @@ output: html_document
 
 ### **Introduction** 
 
-Today, we will talk about the `TidyText` package. The `tidytext` packages allows us to effectively do our text mining tasks by converting texts into *tidy formats*, when incorporated with other tools in data science or machine learning. 
+Today, we will talk about the `TidyText` package. The `tidytext` packages allows us to effectively do text mining tasks by converting text data into *tidy formats*.  We can then incorporated these tidy data sets with other tools in data science or machine learning. 
 
 In this tutorial, we will explain some of the key functions used in the 'tidytext' package by using a simple example. We will then ask you to work on questions using a different data set: Russian Troll Tweets. 
 
@@ -22,9 +22,9 @@ In this tutorial, we will explain some of the key functions used in the 'tidytex
 
 ### **Getting Started** 
 
-**Loading libraries**
+**Loading Libraries**
 
-First, as always, we will have to load libraries and install packages. You will encounter some familiar packages, but the main libraries required to do text mining with `tidytext` are listed below: 
+First, as always, we have to load libraries and install packages. You will encounter some familiar packages, but the main libraries required to do text mining with `tidytext` are listed below: 
 
 ```{r message = FALSE, warning = FALSE}
 # load libraries 
@@ -43,7 +43,7 @@ library(stopwords)
 
 **Looking at the Data Set**
 
-After loading all the relevant libraries, we will look a simple data set that we created. The `text` data set includes 9 different sentences or strings. 
+After loading all the relevant libraries, we will look at a simple data set that we created. The `text` data set includes 9 different sentences or strings. 
 
 ```{r}
 text<-c("Lisa is awesome","I love Data Science","I hate cilantro", "I dislike vegetables", "I enjoy smiling", "I hate exams", "I love travelling", "The weather is so nice!", "Can I have an apple?")
@@ -52,7 +52,7 @@ text
 ```
 
 
-The first task before doing going into text analysis is converting our data set into a *tibble* data frame by using the `tibble` function. A *tibble* is just another class of data frames in R, which allows us to work with tidy functions as it does not convert strings to factors and does not use row names. 
+The first task before doing text analysis is converting our data set into a *tibble* data frame by using the `tibble` function. A *tibble* is just another class of data frames in R, which allows us to work with tidy functions, as it does not convert strings to factors or use row names. 
 
 Take a look at how we were able to achieve this below: 
 
@@ -66,7 +66,7 @@ text_df
 
 After we successfully convert our data set into a tibble data frame, we want to extract individual words and put them into a data frame so that each row has one *token*. 
 
-Each `token` can be interpreted as a word or a unit of text. By utilizing tidytext's `unnest_tokens` function, we can break the text into individual tokens. This process is also known as the *tokenization* process. Note that this function eliminates all the punctuation marks.    
+Each `token` can be interpreted as a word or unit of text. By utilizing tidytext's `unnest_tokens` function, we can break the text into individual tokens. This process is also known as the *tokenization* process. Note that this function eliminates all the punctuation marks.    
 
 ```{r}
 # Tokenization process
@@ -83,7 +83,7 @@ The second parameter will take the tokenized column name from the tibble data fr
 
 Before starting our text analysis, we will also have to exclude stop words such as "is", "I", "the", "about", "an", "the", etc. The `tidytext` package provides a tibble data set called `stop_words` that includes different stop words. 
 
-You can take a peak at some of the stop words by calling the `stop_words` data set:    
+You can take a peek at some of the stop words in the `stop_words` data set:    
 
 ```{r}
 # Look at the stop words data set
@@ -114,9 +114,9 @@ With the cleaned version of the data, we will begin our analysis. In this tutori
 
 **Sentiment Analysis**
 
-Before beginning the sentiment analysis, let's take a step back and understand the purpose of the sentiment analysis. Sentiment analysis "provides a way to understand the attitudes and opinions expressed in texts". 
+Before beginning the sentiment analysis, let's take a step back and understand the purpose of sentiment analysis. Sentiment analysis "provides a way to understand the attitudes and opinions expressed in texts". 
 
-To conduct sentiment analysis, we will be first looking at the `get_sentiments()`. By using this function within the `tidytext` package, we can look at look at words with negative and positive sentiments. Note that this function takes in a lexicon parameter. There are three sentiment lexicons that we can use: 
+To conduct sentiment analysis, we will be first looking at the `get_sentiments()`. By using this function within the `tidytext` package, we can look at words with negative and positive sentiments. Note that this function takes in a lexicon parameter. There are three sentiment lexicons that we can use: 
 
 - `bing` (default): positive vs. negative
 
@@ -124,7 +124,7 @@ To conduct sentiment analysis, we will be first looking at the `get_sentiments()
 
 - `AFINN`: assigns scores from -5 to 5 depending on the sentiment of the word. 
 
-For this tutorial, we will use `bing` for the simplicity. Feel free to play with other lexicons. 
+For this tutorial, we will use `bing` for simplicity. Feel free to play with other lexicons. 
 
 ```{r}
 # Sentiments 
@@ -152,7 +152,7 @@ sentiment_data
 ```
 
 
-Using this sentiment data, we will now begin the sentiment analysis by using some of the functions that we already know. 
+Using this sentiment data, we will now begin the sentiment analysis by using some functions that we already know. 
 
 ```{r}
 sentiment_data %>%  
@@ -164,7 +164,7 @@ From above, We see that there are 3 negative words and 6 positive words.
 
 **Making cool visualizations using `WordCloud`**
 
-With the above analysis in mind, we can also create interesting visualizations using `wordcloud` package. 
+With the above analysis in mind, we can also create interesting visualizations using the `wordcloud` package. 
 
 Using the `text_clean` data (without sentiments), we can create this nice visualization which shows us all the words in the data set. Note that the size of "hate" and "love" are bigger than other words. This is because they appear more than other words.  
 
@@ -183,7 +183,7 @@ sentiment_data %>%
   comparison.cloud(colors = c("red", "green"))
 ```
 
-Compared to the first wordcloud visualization, the one allows us to make a comparison. By looking at this visualization, we can understand what words are positively and negatively associated and what words appear more than the others within their specific groups. 
+Compared to the first wordcloud visualization, this one allows us to make a comparison. Through this visualization, we can understand what words have positive and negative associations and what words appear more than the others within their specific groups. 
 
 \
 \
@@ -191,7 +191,7 @@ Compared to the first wordcloud visualization, the one allows us to make a compa
 
 ### Other notable functions in the `tidytext` package
 
-For the purpose of this tutorial, we selected some of the `tidytext` functions. There are many more function that you may be interested in using for your final project if your group were to do some text mining and analysis. 
+For the purpose of this tutorial, we selected some of the `tidytext` functions. However, there are many more functions that you might be interested in using for your final project if your group were to do some text mining and analysis. 
 
 Other functions and their documentations can be found in the link below: 
 
@@ -258,15 +258,12 @@ troll_tweets_untoken
 #get rid of stopwords (the, and, etc.)
 troll_tweets_cleaned <- troll_tweets_untoken %>%
   anti_join(stop_words)
-
-%>%
-  filter(word != 'https', word != 't.co') #get rid of https and t.co
 ```
 
 Take a look at the troll_tweets_cleaned dataset.  Are there any other words/letters/numbers that we want to eliminate that weren't taken care of by stop_words?
 
 ```{r, eval = FALSE}
-#get rid of http, https, rt, amp, single number digits, and singular letters
+#get rid of http, https, t.co, rt, amp, single number digits, and singular letters
 troll_tweets_cleaned <- troll_tweets_cleaned %>%
   filter(word != ????)
 ```
