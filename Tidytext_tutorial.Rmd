@@ -7,12 +7,11 @@ output: html_document
 
 # **1. Tutorial**
 
-
 ### **Introduction** 
 
 Today, we will talk about the `TidyText` package. The `tidytext` packages allows us to effectively do text mining tasks by converting text data into *tidy formats*.  We can then incorporated these tidy data sets with other tools in data science or machine learning. 
 
-In this tutorial, we will explain some of the key functions used in the 'tidytext' package by using a simple example. We will then ask you to work on questions using a different data set: Russian Troll Tweets. 
+In this tutorial, we will explain some of the key functions used in the `tidytext` package by using a simple example. We will then ask you to work on questions using a different data set: Russian Troll Tweets. 
 
 
 \
@@ -39,7 +38,7 @@ library(wordcloud) # for wordcloud
 library(stopwords)
 ```
 
-
+\
 
 **Looking at the Data Set**
 
@@ -111,6 +110,7 @@ text_clean
 
 With the cleaned version of the data, we will begin our analysis. In this tutorial, we mainly focus on the *sentiment analysis* and creating relevant visualizations using *word cloud*  
 
+\
 
 **Sentiment Analysis**
 
@@ -161,6 +161,7 @@ sentiment_data %>%
 
 From above, We see that there are 3 negative words and 6 positive words. 
 
+\
 
 **Making cool visualizations using `WordCloud`**
 
@@ -189,7 +190,7 @@ Compared to the first wordcloud visualization, this one allows us to make a comp
 \
 \
 
-### Other notable functions in the `tidytext` package
+### **Other notable functions in the `tidytext` package**
 
 For the purpose of this tutorial, we selected some of the `tidytext` functions. However, there are many more functions that you might be interested in using for your final project if your group were to do some text mining and analysis. 
 
@@ -204,6 +205,8 @@ https://cran.r-project.org/web/packages/tidytext/tidytext.pdf
 ## **2. Exercises**
 
 Now you will try using tidytext on a new dataset about Russian Troll tweets.
+
+\
 
 # Read about the data
 
@@ -222,6 +225,9 @@ Variable documentation can be found on [Github](https://github.com/fivethirtyeig
 
 Because there are 12 datasets containing 2,973,371 tweets sent by 2,848 Twitter handles in total, we will be using three of these datasets (one from a Right troll, one from a Left troll, and one from a News Feed account).
 
+\
+\
+
 **1. Read in Troll Tweets Dataset**
 
 ```{r}
@@ -229,6 +235,9 @@ Because there are 12 datasets containing 2,973,371 tweets sent by 2,848 Twitter 
 
 troll_tweets<- read.csv("IRAhandle_tweets_12.csv")
 ```
+
+\
+\
 
 **2. Basic Data Cleaning and Exploration**
 
@@ -240,6 +249,8 @@ troll_tweets<- read.csv("IRAhandle_tweets_12.csv")
 
 ```
 
+\
+\
 
 **3. Unnest Tokens**
 
@@ -251,6 +262,9 @@ troll_tweets_untoken <- troll_tweets1 %>%
 
 troll_tweets_untoken
 ```
+
+\
+\
 
 **4. Remove stopwords**
 
@@ -268,6 +282,9 @@ troll_tweets_cleaned <- troll_tweets_cleaned %>%
   filter(word != ????)
 ```
 
+\
+\
+
 **5. Look at a subset of the tweets to see how often the top words appear.**
 
 ```{r, eval = FALSE}
@@ -280,12 +297,15 @@ ggplot(troll_tweets_small, aes(y = fct_reorder(word,n), x = n)) +
   geom_col()
 ```
 
+\
+\
+
 **6. Sentiment Analysis**
 
   a. Get the sentiments using the "bing" parameter (which classifies words into "positive" or "negative")
   b. Report how many positive and negative words there are in the dataset.  Are there more positive or negative words, and why do you think this might be?
 ```{r, eval = FALSE}
-# look at 
+# look at sentiment
 get_sentiments("bing")
 
 # assign a sentiment to each word that has one associated
@@ -296,6 +316,9 @@ troll_tweets_sentiment <- troll_tweets_cleaned %>%
 troll_tweets_sentiment %>% 
   ???
 ```
+
+\
+\
 
 **7. Using the troll_tweets_small dataset, make a wordcloud:**
 
@@ -318,14 +341,21 @@ troll_tweets_sentiment %>%
 
 Are there any words whose categorization as "positive" or "negative" surprised you?
 
+\
+\
+\
 
 
-**Sources**
+# **Sources**
 
-  *https://cran.r-project.org/web/packages/tidytext/tidytext.pdf
-  *https://www.tidytextmining.com/
-  *https://fivethirtyeight.com/features/why-were-sharing-3-million-russian-troll-tweets
-  *https://www.youtube.com/watch?v=-uVo0Xvmimw
-  *https://github.com/fivethirtyeight/russian-troll-tweets/
+  - https://cran.r-project.org/web/packages/tidytext/tidytext.pdf
+  
+  - https://www.tidytextmining.com/
+  
+  - https://fivethirtyeight.com/features/why-were-sharing-3-million-russian-troll-tweets
+  
+  - https://www.youtube.com/watch?v=-uVo0Xvmimw
+  
+  - https://github.com/fivethirtyeight/russian-troll-tweets/
 
 
